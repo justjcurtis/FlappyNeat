@@ -25,7 +25,7 @@ const champCheckedEvent = () => {
 function setup() {
     // createCanvas(480, 720)
     createCanvas(windowWidth, windowHeight - 50)
-    bg = loadImage('../assets/background.jpg');
+    bg = loadImage('https://raw.githubusercontent.com/justjcurtis/FlappyNeat/main/assets/background.jpg');
     world = new World(popSize, showSize, pause, playing)
     aiCheckbox = createCheckbox('AI', !playing);
     aiCheckbox.changed(aiCheckedEvent);

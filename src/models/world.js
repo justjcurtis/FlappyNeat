@@ -3,7 +3,7 @@ class World {
         this.pause = pause
         this.n = n
         this.showSize = showSize > n ? n : showSize
-        this.birdImage = loadImage('../assets/bird.png')
+        this.birdImage = loadImage('https://raw.githubusercontent.com/justjcurtis/FlappyNeat/main/assets/bird.png')
         this.pipes = new Pipes()
         this.birds = []
         this.dead = []
