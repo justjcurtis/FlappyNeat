@@ -17,6 +17,13 @@ class NeatVisualiser {
         const xSpace = (this.w / (g.layers.length + 2))
         rect(this.x, this.y, this.w, this.h)
         const nodeMap = {}
+        const hasConnections = {}
+        for (let i = 0; i < g.connections.length; i++) {
+            const con = g.connections[i]
+            if (!con.enabled || con.weight == 0) continue
+            hasConnections[con.inNode] = true
+            hasConnections[con.outNode] = true
+        }
         for (let i = 0; i < g.layers.length; i++) {
             const ySpace = (this.h / g.layers[i].length)
             const yTop = (ySpace / 2 + 0)
@@ -38,16 +45,22 @@ class NeatVisualiser {
                     text(str, x + xSpace / 2, y - 7, 100, 100)
                 }
                 const node = g.layers[i][j]
+                const hasConnection = hasConnections[node.id]
                 nodeMap[node.id] = [x, y]
-                fill(255, node.activation * 10, node.activation * 10, 100)
                 stroke(0, 100)
-                strokeWeight(2 + ((2 * sigmoid(node.bias)) - 1) * 2)
+                if (hasConnection) {
+                    fill(255, node.activation * 10, node.activation * 10, 100)
+                    strokeWeight(2 + ((2 * sigmoid(node.bias)) - 1) * 2)
+                } else {
+                    fill(100, 100)
+                    strokeWeight(0.5)
+                }
                 ellipse(x, y, 10)
             }
         }
         for (let i = 0; i < g.connections.length; i++) {
             const con = g.connections[i]
-            if (!con.enabled) continue
+            if (!con.enabled || con.weight == 0) continue
             const sw = (sigmoid(con.weight) * 2) + 2
             strokeWeight(sw)
             if (sw > 2) stroke(0, 100)
