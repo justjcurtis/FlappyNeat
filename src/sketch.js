@@ -55,7 +55,7 @@ function keyPressed() {
 }
 
 let isTouching = false
-const handleTouch = (ms = 200) => {
+const handleTouch = (ms = 150) => {
     if (isTouching == true) return
     isTouching = true
     if (mouseX < width && mouseY < height) {
