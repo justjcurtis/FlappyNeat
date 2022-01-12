@@ -106,6 +106,13 @@ class Genome {
         }
     }
 
+    validateConnections() {
+        for (let i = 0; i < this.connections.length; i++) {
+            const con = this.connections[i]
+            if (con.inNode.layer == con.outNode.layer) con.enabled = false
+        }
+    }
+
     simplify(neat) {
         if (this.connections.length < 1) return
         if (Math.random() < neat.probs.disableConnectionChance) this.mutateDeleteConnection()
@@ -256,11 +263,9 @@ class Genome {
     }
 
     mutateInterpose(neat) {
-        let outNode
         for (let i = 0; i < 20; i++) {
             const con = getRandomElement(this.connections)
             if (con.isRecurrent() || !con.enabled) continue
-            outNode = this.nodes[this.nodeMap[con.outNode]]
             neat.interposeConnection(this, con)
             this.g = null
             break
@@ -268,9 +273,8 @@ class Genome {
         this.constructLayers()
         for (let i = 0; i < this.connections.length; i++) {
             const con = this.connections[i]
-            if (con.inNode.layer >= con.outNode.layer) con.enabled = false
+            if (con.inNode.layer == con.outNode.layer) con.enabled = false
         }
-        this.constructLayers()
     }
 
     mutateWeightShift(x = 0.3) {
