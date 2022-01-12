@@ -26,7 +26,7 @@ class Client {
                     if (parentCon.isRecurrent()) value += parentCon.outputCache
                     else value += graph[parentCon.inNode].value * parentCon.weight
                 }
-                graph[node.id].value = sigmoid(value + node.bias)
+                graph[node.id].value = aFn[node.activation](value + node.bias)
             }
         }
         const recurrentConnections = this.genome.connections.filter(con => con.isRecurrent())

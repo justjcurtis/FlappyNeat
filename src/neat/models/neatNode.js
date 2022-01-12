@@ -4,6 +4,7 @@ class Node {
         this.bias = bias
         this.type = type
         this.layer = type == NodeType.input ? 0 : null
+        this.activation = type == NodeType.hidden ? aNm.sig : aNm.sig
     }
 
     static Equal(a, b) {
@@ -12,16 +13,20 @@ class Node {
 
     static FromJson(json) {
         const data = JSON.parse(json)
-        return new Node(data.id, data.type, data.bias, data.layer)
+        const n = new Node(data.id, data.type, data.bias)
+        n.layer = data.layer
+        n.activation = data.activation
+        return n
     }
 
     copy() {
         const n = new Node(this.id, this.type, this.bias)
+        n.activation = this.activation
         n.layer = this.layer
         return n
     }
 
     toJson() {
-        return JSON.stringify({ id: this.id, type: this.type, bias: this.bias, layer: this.layer })
+        return JSON.stringify({ id: this.id, type: this.type, bias: this.bias, layer: this.layer, activation: this.activation })
     }
 }

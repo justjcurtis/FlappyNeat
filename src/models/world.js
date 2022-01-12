@@ -19,13 +19,13 @@ class World {
     }
 
     initNeat() {
-        this.neat = new Neat(5, 1, this.n, true)
+        this.neat = new Neat(5, 1, { maxPop: this.n, recurrent: true })
     }
 
     addNeatBirds() {
         if (this.neat == undefined) this.initNeat()
         const brains = this.neat.pop
-        this.neatVisualiser = new NeatVisualiser(width - (height / 4) - 10, height * (3 / 4) - 10, height / 4, height / 4)
+        this.neatVisualiser = new NeatVisualiser(width - (height / 4) - 160, height * (3 / 4) - 10, (height / 4) + 150, height / 4, ['pipe x', 'pipe t y', 'pipe b y', 'bird vel', 'bird y'], ['jump'])
         for (let i = 0; i < this.n; i++) {
             this.birds.push(new Bird(this.birdImage, brains[i]))
         }
@@ -105,7 +105,7 @@ class World {
             }
 
             stroke(0, 100)
-            strokeWeight(2)
+            strokeWeight(1)
             fill(255, 200)
             rect(1, 0, width - 2, 32)
             fill(0, 255)

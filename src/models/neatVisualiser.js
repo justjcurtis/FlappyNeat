@@ -1,10 +1,12 @@
 class NeatVisualiser {
-    constructor(x, y, w, h) {
+    constructor(x, y, w, h, inpNames, outNames) {
         this.x = x
         this.y = y
         this.w = w
         this.h = h
         this.brain
+        this.inpNames = inpNames
+        this.outNames = outNames
     }
 
     render(g) {
@@ -12,19 +14,34 @@ class NeatVisualiser {
         stroke(1, 100);
         strokeWeight(2)
         fill(0, 0, 0, 100)
+        const xSpace = (this.w / (g.layers.length + 2))
         rect(this.x, this.y, this.w, this.h)
-        const xSpace = (this.w / g.layers.length)
-        fill(255, 0, 0, 100)
-        stroke(0, 100)
-        strokeWeight(2)
         const nodeMap = {}
         for (let i = 0; i < g.layers.length; i++) {
             const ySpace = (this.h / g.layers[i].length)
             const yTop = (ySpace / 2 + 0)
             for (let j = 0; j < g.layers[i].length; j++) {
-                const x = this.x + (i * xSpace) + xSpace / 2
+                const x = this.x + ((i * xSpace) + xSpace / 2) + xSpace
                 const y = this.y + yTop + (j * ySpace)
-                nodeMap[g.layers[i][j].id] = [x, y]
+                if (i == 0) {
+                    const str = this.inpNames[j]
+                    fill(0, 100)
+                    stroke(0, 100)
+                    strokeWeight(1)
+                    text(str, x - xSpace, y - 7, 100, 100)
+                }
+                if (i == g.layers.length - 1) {
+                    const str = this.outNames[j]
+                    fill(0, 100)
+                    stroke(0, 100)
+                    strokeWeight(1)
+                    text(str, x + xSpace / 2, y - 7, 100, 100)
+                }
+                const node = g.layers[i][j]
+                nodeMap[node.id] = [x, y]
+                fill(255, node.activation * 10, node.activation * 10, 100)
+                stroke(0, 100)
+                strokeWeight(2 + ((2 * sigmoid(node.bias)) - 1) * 2)
                 ellipse(x, y, 10)
             }
         }

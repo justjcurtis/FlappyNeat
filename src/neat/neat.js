@@ -32,14 +32,40 @@ const defaultProbs = {
     disableConnectionChance: 0.02,
     addNodeChance: 0.02,
     deleteConnectionChance: 0.05,
-    deleteNodeChance: 0.05
+    deleteNodeChance: 0.05,
+    randomActivationChance: 0.05,
+}
+
+const defaultOpts = {
+    maxPop: 100,
+    recurrent: false,
+    outputActivation: 'tanh',
+    hiddenActivation: 'tanh',
+    allowedActivations: [
+        'id',
+        'sig',
+        'tanh',
+        'relu',
+        'bin',
+        'gelu',
+        'softPlus',
+        'invert',
+        'softSign',
+        'bipolSig',
+    ],
+    hyper: {},
+    probs: {}
 }
 
 class Neat {
-    constructor(inputs, outputs, maxPop, recurrent = false, hyper = {}, probs = {}) {
+    constructor(inputs, outputs, opts) {
+        opts = {...defaultOpts, ...opts }
         this.inputs = inputs
         this.outputs = outputs
-        this.maxPop = maxPop
+        this.outputActivation = opts.outputActivation
+        this.hiddenActivation = opts.hiddenActivation
+        this.allowedActivations = opts.allowedActivations
+        this.maxPop = opts.maxPop
         this.pop = []
         this.connectionPool = {}
         this.connections = []
@@ -47,9 +73,9 @@ class Neat {
         this.currentConnections = 0
         this.nodePool = []
         this.mandatoryNodes = []
-        this.hyper = {...defaultHyper, ...hyper }
-        this.probs = {...defaultProbs, ...probs }
-        if (!recurrent) this.probs.addRecurrentChance = 0
+        this.hyper = {...defaultHyper, ...opts.hyper }
+        this.probs = {...defaultProbs, ...opts.probs }
+        if (!opts.recurrent) this.probs.addRecurrentChance = 0
         this.prevSpecScores = {}
         this.dropoffTracker = {}
         this.nextPruneComplexity = 0
@@ -66,6 +92,7 @@ class Neat {
         const outputNodes = []
         for (let i = 0; i < this.outputs; i++) {
             const node = new Node(i + this.inputs, NodeType.output, randomRange(this.hyper.minBias, this.hyper.maxBias))
+            node.activation = aNm[this.outputActivation]
             outputNodes.push(node)
         }
 
@@ -169,6 +196,7 @@ class Neat {
             node = this.replacePool[connection.id].copy()
         } else {
             node = this.newNode(NodeType.hidden)
+            node.activation = aNm[this.hiddenActivation]
             this.replacePool[connection.id] = node
         }
         const innovA = this.getInnovationId(connection.inNode, node.id)
@@ -405,7 +433,6 @@ class Neat {
     }
 
     evolve() {
-        // console.log(this.pop.length)
         this.pop.sort((a, b) => b.score - a.score)
         const elite = this.pop[0] //.slice(0, Math.floor(this.pop.length * this.hyper.elitism)).map(c => new Client(c.genome.copy()))
         let species = this.speciate()

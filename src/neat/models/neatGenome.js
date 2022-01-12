@@ -107,8 +107,22 @@ class Genome {
     }
 
     simplify(neat) {
-        // this.augment(neat)
-        // return
+        if (this.connections.length < 1) return
+        if (Math.random() < neat.probs.disableConnectionChance) this.mutateDeleteConnection()
+        if (Math.random() < neat.probs.addNodeChance) this.mutateDeleteNode(neat)
+        this.mutate(neat)
+    }
+
+    augment(neat) {
+        if (Math.random() < neat.probs.addConnectionChance) this.mutateConnection(neat)
+        if (this.connections.length < 1) return
+        if (Math.random() < neat.probs.addNodeChance) this.mutateInterpose(neat)
+        if (Math.random() < neat.probs.disableConnectionChance) this.mutateDisableConnection()
+        this.mutate(neat)
+    }
+
+    mutate(neat) {
+        if (Math.random() < neat.probs.randomActivationChance) this.mutateActivation(neat.allowedActivations)
         if (Math.random() < neat.probs.biasMutationChance) {
             if (Math.random() < neat.probs.biasShiftChance) this.mutateBiasShift(neat.hyper.biasShiftStrength)
             else this.mutateBiasRandom(neat)
@@ -118,8 +132,6 @@ class Genome {
             if (Math.random() < neat.probs.weightShiftChance) this.mutateWeightShift(neat.hyper.weightShiftStrength)
             else this.mutateWeightRandom(neat)
         }
-        if (Math.random() < neat.probs.disableConnectionChance) this.mutateDeleteConnection()
-        if (Math.random() < neat.probs.addNodeChance) this.mutateDeleteNode(neat)
     }
 
     mutateDeleteConnection() {
@@ -212,19 +224,12 @@ class Genome {
         }
     }
 
-    augment(neat) {
-        if (Math.random() < neat.probs.biasMutationChance) {
-            if (Math.random() < neat.probs.biasShiftChance) this.mutateBiasShift(neat.hyper.biasShiftStrength)
-            else this.mutateBiasRandom(neat)
-        }
-        if (Math.random() < neat.probs.addConnectionChance) this.mutateConnection(neat)
-        if (this.connections.length < 1) return
-        if (Math.random() < neat.probs.weightMutationChance) {
-            if (Math.random() < neat.probs.weightShiftChance) this.mutateWeightShift(neat.hyper.weightShiftStrength)
-            else this.mutateWeightRandom(neat)
-        }
-        if (Math.random() < neat.probs.addNodeChance) this.mutateInterpose(neat)
-        if (Math.random() < neat.probs.disableConnectionChance) this.mutateDisableConnection()
+    mutateActivation(allowed) {
+        if (allowed.length < 1) return
+        const aName = getRandomElement(allowed)
+        const n = getRandomElement(this.nodes.filter(n => n.type != NodeType.input))
+        n.activation = aNm[aName]
+
     }
 
     mutateBiasShift(x = 0.3) {
