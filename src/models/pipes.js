@@ -4,10 +4,10 @@ class Pipes {
         this.addInitialPipes()
     }
     addInitialPipes() {
-        let x = 250
+        let x = 300
         while (x < width - 110) {
             this.addPipe(height / 2, x)
-            x += (200 + Math.floor(Math.random() * 220))
+            x += (300 + Math.floor(Math.random() * 200))
         }
     }
 
@@ -43,7 +43,7 @@ class Pipes {
 
         const lastPipeX = this.pipes[this.pipes.length - 1].x
         const lastPipeY = this.pipes[this.pipes.length - 1].y
-        if (lastPipeX <= width - 220) {
+        if (lastPipeX <= width - 300) {
             if (Math.random() < 0.02) {
                 this.addPipe(lastPipeY)
             }
