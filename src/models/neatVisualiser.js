@@ -1,3 +1,5 @@
+const sigmoid = x => 1 / (1 + Math.exp(-x))
+
 class NeatVisualiser {
     constructor(x, y, w, h, inpNames, outNames) {
         this.x = x
@@ -65,7 +67,8 @@ class NeatVisualiser {
             strokeWeight(sw)
             if (sw > 2) stroke(0, 100)
             else stroke(0, 100)
-            if (con.isRecurrent()) stroke(0, 0, 255, 100)
+                // console.log(con.recurrent)
+            if (con.recurrent) stroke(0, 0, 255, 100)
             const [x1, y1] = nodeMap[con.inNode]
             const [x2, y2] = nodeMap[con.outNode]
             line(x1 + 5, y1, x2 - 5, y2)

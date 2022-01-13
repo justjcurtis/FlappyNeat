@@ -19,7 +19,7 @@ class World {
     }
 
     initNeat() {
-        this.neat = new Neat(5, 1, { maxPop: this.n, recurrent: true })
+        this.neat = new Neat(5, 1, { maxPop: this.n })
     }
 
     addNeatBirds() {
