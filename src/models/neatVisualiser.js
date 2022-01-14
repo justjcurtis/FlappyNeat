@@ -54,7 +54,7 @@ class NeatVisualiser {
                     fill(255, node.activation * 10, node.activation * 10, 100)
                     strokeWeight(2 + ((2 * sigmoid(node.bias)) - 1) * 2)
                 } else {
-                    fill(100, 100)
+                    fill(100, 50)
                     strokeWeight(0.5)
                 }
                 ellipse(x, y, 10)
@@ -67,8 +67,7 @@ class NeatVisualiser {
             strokeWeight(sw)
             if (sw > 2) stroke(0, 100)
             else stroke(0, 100)
-                // console.log(con.recurrent)
-            if (con.recurrent) stroke(0, 0, 255, 100)
+            if (con.recurrent) stroke(2, 85, 100, 100)
             const [x1, y1] = nodeMap[con.inNode]
             const [x2, y2] = nodeMap[con.outNode]
             line(x1 + 5, y1, x2 - 5, y2)
